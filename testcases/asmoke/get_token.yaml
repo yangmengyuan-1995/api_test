@@ -1,0 +1,30 @@
+-
+  feature: 公众号模块
+  story: 获取鉴权码接口
+  title: 验证获取鉴权码接口成功返回
+  request:
+    method: get
+    url: ${get_base_url(weixin_base_url)}/cgi-bin/token
+    params:
+      grant_type: null
+      appid: null
+      secret: null
+  env:
+    access_token: [json, "$.access_token", 0]
+  parametrize:
+    quantity: 4
+    param_key: params
+    titles: ['验证获取鉴权码接口成功返回', '验证grant_type为空的返回', '验证appid为空的返回', '验证secret为空的返回']
+    params:
+      grant_type: ['client_credential', null, 'client_credential', 'client_credential' ]
+      appid: ['', '', null, '' ]
+      secret: ['', '', '', null ]
+    validates:
+      - contains:
+          返回文本包含access_token: [access_token, text]
+      - contains:
+          返回文本包含40002验证码: [40002, text]
+      - contains:
+          返回文本包含40002验证码: [41002, text]
+      - contains:
+          返回文本包含40004验证码: [41004, text]

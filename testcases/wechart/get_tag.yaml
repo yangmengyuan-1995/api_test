@@ -1,0 +1,23 @@
+-
+  feature: 公众号模块
+  story: 获取公众号已创建的标签
+  title: 验证接口成功返回
+  request:
+    method: get
+    url: ${get_base_url(weixin_base_url)}/cgi-bin/tags/get
+    params:
+      access_token=${get_env_var(access_token)}
+  validate:
+    contains:
+      返回结果包含tags: [tags, text]
+-
+  feature: 公众号模块
+  story: 获取公众号已创建的标签
+  title: 验证不传入access_token接口返回
+  request:
+    method: get
+    url: ${get_base_url(weixin_base_url)}/cgi-bin/tags/get
+    params: null
+  validate:
+    contains:
+      返回结果包含tags: [access_token missing, text]
