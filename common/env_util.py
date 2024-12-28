@@ -51,7 +51,7 @@ class EnvVarUtil:
             func = FuncTuple(*func)
             try:
                 if func.args == '':
-                    new_value = getattr(FuncCollectUtil(), func.name)
+                    new_value = getattr(FuncCollectUtil(), func.name)()
                 else:
                     try:
                         new_value = getattr(FuncCollectUtil(), func.name)(*func.args.split(','))
