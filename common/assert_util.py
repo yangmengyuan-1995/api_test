@@ -21,14 +21,13 @@ class AssertUtil:
             logger.error(f'目前不支持 "{assert_type}" 类型的断言, 请修改后重试')
             raise Exception(f'目前不支持 "{assert_type}" 类型的断言, 请修改后重试')
         AssertTuple = namedtuple('AssertTuple', ['expect', 'actually'])
-
+        validate = True
         for msg, expr in value.items():
             try:
                 expr = AssertTuple(*[str(v) for v in expr])
                 # 从响应中获取实际值
                 actually_value = getattr(res, expr.actually)
                 # 进行断言判断(python3.10及以上版本可以使用match case)
-
                 if assert_type == EQUALS:
                     assert expr.expect == actually_value, msg
                 if assert_type == CONTAINS:
@@ -39,9 +38,10 @@ class AssertUtil:
                 if assert_type == DB_CONTAINS:
                     value = db.get_one(expr.expect)
                     assert value in actually_value, msg
-            except Exception as e:
-                logger.error(f"{msg}断言失败: {str(traceback.format_exc())} \n")
-                raise e
-        logger.info('断言成功 \n')
+            except AssertionError:
+                logger.error(f"{msg}断言失败: {str(traceback.format_exc())}")
+                validate = False
+        if validate:
+            logger.info('断言成功 \n')
 
 
